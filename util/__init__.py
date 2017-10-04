@@ -1,5 +1,6 @@
 import sys
 import os
+from functools import wraps
 
 if getattr(sys, 'frozen', False):
     ROOT_PATH = os.path.dirname(os.path.dirname(sys.executable))
@@ -13,10 +14,10 @@ for path in [SRC_PATH, LOG_PATH]:
     if not os.path.exists(path):
         os.mkdir(path)
 
-def Singleton(cls, *args, **kw):
+def Singleton(cls):
     instances = {}
-
-    def _singleton():
+    @wraps(cls)
+    def _singleton(*args, **kw):
         if cls not in instances:
             instances[cls] = cls(*args, **kw)
         return instances[cls]
