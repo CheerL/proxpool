@@ -1,0 +1,7 @@
+requests
+flask
+lxml
+threadpool
+aiohttp
+sqlalchemy
+test*
