@@ -8,10 +8,11 @@ import asyncio
 import async_timeout
 
 from itertools import cycle
-from util.logger import LogHandler
 from lxml import etree
 from util import Singleton, SRC_PATH
 from util import parallel as pl
+from util.logger import LogHandler
+from util.async_run import async_run
 
 from sqlalchemy import Column, String, Integer, Boolean, create_engine, and_, or_
 from sqlalchemy.orm import sessionmaker
@@ -94,15 +95,14 @@ class Proxy(BASE):
     def __str__(self):
         return self.addr
 
-    async def test_delay(self, sem=None):
+    async def test_delay(self):
         urls = ['http://www.baidu.com', 'http://music.163.com', 'http://www.runoob.com']
         proxy = 'http://{}'.format(self.addr)
         self.verify = True
         try:
-            async with sem:
-                all_delay = 0
-                for url in urls:
-                    all_delay += await fetch(url, proxy)
+            all_delay = 0
+            for url in urls:
+                all_delay += await fetch(url, proxy)
             self.delay = all_delay / len(urls)
             self.ver_last = time.time()
             self.used = False
@@ -287,15 +287,8 @@ class ProxyPool(object):
                     )
                 ).all()
                 if update_proxy_list:
-                    loop = asyncio.new_event_loop()
-                    sem = asyncio.Semaphore(100, loop=loop)
-                    tasks = [proxy.test_delay(sem) for proxy in update_proxy_list]
-                    try:
-                        loop.run_until_complete(asyncio.wait(tasks))
-                    except Exception as e:
-                        print(e)
-                    finally:
-                        loop.close()
+                    tasks = [proxy.test_delay() for proxy in update_proxy_list]
+                    async_run(tasks)
 
                     self.pool.filter(
                         or_(
