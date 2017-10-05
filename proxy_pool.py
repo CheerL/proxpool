@@ -9,10 +9,10 @@ import async_timeout
 
 from itertools import cycle
 from lxml import etree
-from util import Singleton, SRC_PATH
-from util import parallel as pl
-from util.logger import LogHandler
-from util.async_run import async_run
+from utils import Singleton, SRC_PATH
+from utils import parallel as pl
+from utils.logger import LogHandler
+from utils.async_run import async_run
 
 from sqlalchemy import Column, String, Integer, Boolean, create_engine, and_, or_
 from sqlalchemy.orm import sessionmaker

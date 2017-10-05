@@ -1,7 +1,7 @@
 import os
 import logging
 from logging.handlers import TimedRotatingFileHandler
-from util import LOG_PATH
+from utils import LOG_PATH
 
 CRITICAL = 50
 FATAL = CRITICAL

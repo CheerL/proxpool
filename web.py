@@ -4,7 +4,7 @@ import time
 from flask import Flask, Blueprint, send_file
 from proxy_pool_api import proxy
 from proxy_pool import ProxyPool
-from util import parallel as pl
+from utils import parallel as pl
 
 app = Flask('web')
 app.register_blueprint(proxy, url_prefix='/proxy')
