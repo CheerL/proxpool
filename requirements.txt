@@ -4,4 +4,3 @@ lxml
 threadpool
 aiohttp
 sqlalchemy
-test*

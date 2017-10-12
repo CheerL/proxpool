@@ -32,7 +32,10 @@ HEADER = {
 }
 
 BASE = declarative_base()
-ENGINE = create_engine('sqlite:///{}'.format(DB_PATH))
+ENGINE = create_engine(
+    'sqlite:///{}'.format(DB_PATH),
+    connect_args={'check_same_thread':False}
+    )
 SESSION = sessionmaker(bind=ENGINE)()
 
 async def fetch(url, proxy=None):
@@ -190,8 +193,8 @@ class ProxyGetter(object):
                 response = requests.get(url, headers=HEADER,proxies=self.proxy)
                 html = etree.HTML(response.text)
                 tr_list += html.xpath('//tr')[1:]
-            except Exception as e:
-                print(e)
+            except:
+                pass
 
         for tr in tr_list:
             proxy = tr.xpath('./td/text()')[0:2]
